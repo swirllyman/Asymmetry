@@ -5,12 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Basic Network Manager Class. Responsible for Creating / Joining Rooms and handling game connection / disconnection
+/// </summary>
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    [Tooltip("Networked Player Object")]
     public GameObject playerPrefab;
-    public Recorder primaryRecorder;
 
+    [Tooltip("Canvas To Disable when going online")]
     public GameObject playerCanvas;
+
+
+    Recorder primaryRecorder;
     bool connecting = false;
     string gameVersion = "1";
 
@@ -20,6 +27,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
+        primaryRecorder = GetComponent<Recorder>();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
@@ -33,6 +41,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /// <summary>
+    /// Basic method to initialize the most simple connection and go online
+    /// </summary>
     public void Connect()
     {
         if (PhotonNetwork.IsConnected)

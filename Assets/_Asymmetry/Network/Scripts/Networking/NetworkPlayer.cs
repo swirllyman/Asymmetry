@@ -1,16 +1,20 @@
 using UnityEngine;
 using Photon.Pun;
 
+/// <summary>
+/// Basic Class For Handling Network Player Functionality
+/// </summary>
 public class NetworkPlayer : MonoBehaviourPun
 {
     public SimpleBodyIK myIK;
     public Transform head, leftHand, rightHand;
     public Animator[] handAnims;
 
-    PlayerPlatform followPlatform;
+    AsymmetricPlatform followPlatform;
 
     private void Start()
     {
+        // Disable visuals for local player
         if (photonView.IsMine)
         {
             myIK.gameObject.SetActive(false);
@@ -21,6 +25,8 @@ public class NetworkPlayer : MonoBehaviourPun
 
     void Update()
     {
+        // Update positions on local player only
+        // PhotonNetworkTransforms update this position to all other players
         if (photonView.IsMine)
         {
             head.position = followPlatform.head.position;
@@ -39,15 +45,20 @@ public class NetworkPlayer : MonoBehaviourPun
         gameObject.SetActive(false);
     }
 
-    public void SetupPlayer(PlayerPlatform playerPlatform, bool useVR)
+    /// <summary>
+    /// Setup a new Networked Player
+    /// </summary>
+    /// <param name="playerPlatform"> Platform used for getting local player position </param>
+    /// <param name="usingVR"></param>
+    public void SetupPlayer(AsymmetricPlatform playerPlatform, bool usingVR)
     {
         if (photonView.IsMine)
         {
             followPlatform = playerPlatform;
-            if (useVR)
+            if (usingVR)
             {
-                LocalPlayerPlatform.singleton.vrHands[0].onUpdateHandPose += NetworkPlayer_onUpdateHandPose;
-                LocalPlayerPlatform.singleton.vrHands[1].onUpdateHandPose += NetworkPlayer_onUpdateHandPose;
+                AsymmetricPlayerPlatform.singleton.vrHands[0].onUpdateHandPose += NetworkPlayer_onUpdateHandPose;
+                AsymmetricPlayerPlatform.singleton.vrHands[1].onUpdateHandPose += NetworkPlayer_onUpdateHandPose;
             }
             else
             {
@@ -56,17 +67,16 @@ public class NetworkPlayer : MonoBehaviourPun
         }
     }
 
-    private void NetworkPlayer_onUpdateHandPose(int handID, float flex, float pinch, float point, float thumbsUp)
-    {
-        photonView.RPC(nameof(UpdateHandsPose_RPC), RpcTarget.All, handID, flex, pinch, point, thumbsUp);
-    }
-
-
     [PunRPC]
     public void SetupPlayerPC_RPC()
     {
         handAnims[0].gameObject.SetActive(false);
         handAnims[1].gameObject.SetActive(false);
+    }
+
+    private void NetworkPlayer_onUpdateHandPose(int handID, float flex, float pinch, float point, float thumbsUp)
+    {
+        photonView.RPC(nameof(UpdateHandsPose_RPC), RpcTarget.All, handID, flex, pinch, point, thumbsUp);
     }
 
     [PunRPC]
