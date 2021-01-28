@@ -1,5 +1,8 @@
 # Asymmetry
-Free, Open Source Asymmetrical VR Repo 
+Free, Open Source Asymmetrical VR Repo
+
+![](AsymmetryGif.gif)
+
 
 ### __How To Use__
 1) Download and Open with Unity (only tested on 2020.2+)
