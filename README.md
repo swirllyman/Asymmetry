@@ -13,6 +13,7 @@ The Framework has Photon and Oculus Integration included in the unitypackage
 - Create a new Unity Project with the URP Renderer (only tested on 2020.2+)
 - Import the package "Asymmetric" from the relases section
 - Open the scene "Asymmetry_Online_Demo"
+- Setup Input in the Unity Input Manager for "Horizontal_Keyboard", "Vertical_Keyboard", and "Jump_Keyboard"
 - Press Play in the editor
 - If a VR Headset is connected it will default to VR Controller
 - The PC Player can use buttons to add / drop themselves into the scene 
